@@ -1,0 +1,194 @@
+.App {
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.app-container {
+  width: 100%;
+  height: 100vh;
+  background: transparent;
+  border-radius: 0;
+  backdrop-filter: none;
+  box-shadow: none;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Hamburger Icon */
+.hamburger-icon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  cursor: pointer;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+
+.hamburger-icon div {
+  width: 20px;
+  height: 1.5px;
+  background-color: white;
+  margin: 6px 0;
+  transition: 0.4s;
+  border-radius: 2px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 250px;
+  background: rgba(0, 0, 0, 0.9);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  padding: 0 28px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
+
+.sidebar-header h2 {
+  color: #4CAF50;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  color: white;
+}
+
+.sidebar-menu li:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-menu li.active {
+  background: rgba(76, 175, 80, 0.2);
+  border-left: 3px solid #4CAF50;
+  color: #4CAF50;
+}
+
+/* Main Content Styles */
+.main-content {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  margin: 20px;
+  box-sizing: border-box;
+}
+
+/* Overlay for mobile */
+.overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+  
+  /* Overlay for mobile */
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  
+  .sidebar-header {
+    padding: 0 20px 15px;
+    margin-bottom: 15px;
+  }
+  
+  .sidebar-menu li {
+    padding: 12px 20px;
+  }
+  
+  .main-content {
+    padding: 15px;
+    margin: 10px;
+  }
+  
+  .hamburger-icon {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 10px;
+    margin: 5px;
+  }
+  
+  .sidebar-menu {
+    flex-direction: column;
+  }
+  
+  .sidebar-menu li {
+    text-align: left;
+    border-top: none;
+    border-left: 3px solid transparent;
+  }
+  
+  .sidebar-menu li.active {
+    border-top: none;
+    border-left: 3px solid #4CAF50;
+  }
+}

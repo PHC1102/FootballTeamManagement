@@ -1,0 +1,37 @@
+/* Lineup View Styles */
+.lineups-section h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #4CAF50;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.placeholder-content {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.placeholder-content p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+
+@media (max-width: 768px) {
+  .placeholder-content {
+    padding: 20px;
+  }
+  
+  .placeholder-content p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .placeholder-content {
+    padding: 15px;
+  }
+}
