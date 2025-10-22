@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import '../PlayerView/PlayerView.css';     // Tái dùng style chung của PlayerView
-import './MarketView.css';                 // Style riêng cho Market (nút Buy, v.v.)
+import '../PlayerView/PlayerView.css';     // tái dùng style chung
+import './MarketView.css';                 // style riêng cho Market (btn Buy)
 
 const POSITIONS = ['GK', 'CB', 'LB', 'RB', 'CDM', 'CM', 'CAM', 'LM', 'RM', 'LW', 'RW', 'ST'];
 
@@ -9,7 +9,6 @@ function formatBP(n) {
   const val = Number(n);
   return `${val.toLocaleString('en-US')} BP`;
 }
-
 
 const readLS = (key) => {
   try { return JSON.parse(localStorage.getItem(key) || '[]'); }
@@ -23,7 +22,6 @@ const MarketView = () => {
     try { return JSON.parse(localStorage.getItem('marketPlayers') || '[]'); }
     catch { return []; }
   });
-
   useEffect(() => {
     localStorage.setItem('marketPlayers', JSON.stringify(players));
   }, [players]);
@@ -88,19 +86,15 @@ const MarketView = () => {
   const [confirmBuy, setConfirmBuy] = useState({
     open: false, playerId: null, playerName: '', marketValue: 0
   });
-
   const openConfirmBuy = (p) => setConfirmBuy({
     open: true,
     playerId: p.id,
     playerName: p.name,
     marketValue: Number(p.marketValue) || 0,
   });
-
   const closeConfirmBuy = () => setConfirmBuy({
     open: false, playerId: null, playerName: '', marketValue: 0
   });
-
-
 
   const doBuy = () => {
     const cost = Number(confirmBuy.marketValue) || 0;
@@ -108,7 +102,6 @@ const MarketView = () => {
       alert('Not enough budget to complete this transfer.');
       return;
     }
-
     // 1) Lấy cầu thủ từ list market hiện tại
     const bought = players.find(p => p.id === confirmBuy.playerId);
     if (!bought) { closeConfirmBuy(); return; }
@@ -119,13 +112,18 @@ const MarketView = () => {
       writeLS('players', [bought, ...roster]);
     }
 
-    // 3) Trừ ngân quỹ & xóa khỏi market (KHÔNG side-effect trong updater)
+    // 3) Trừ ngân quỹ & xóa khỏi market
     setBudget(prev => prev - cost);
     setPlayers(players.filter(p => p.id !== bought.id));
 
     // 4) Đóng modal
     closeConfirmBuy();
   };
+
+  // ======= DETAIL MODAL (card click) =======
+  const [detail, setDetail] = useState({ open: false, player: null });
+  const openDetail = (p) => setDetail({ open: true, player: p });
+  const closeDetail = () => setDetail({ open: false, player: null });
 
   // ======= SEARCH (single input) =======
   const [q, setQ] = useState('');
@@ -209,43 +207,42 @@ const MarketView = () => {
           </div>
         )}
 
-        {/* Table */}
-        <div className="players-list">
+        {/* Cards (thay bảng) */}
+        <div className="market-list">
           {shownPlayers.length === 0 ? (
-            <p className="empty">No players match your search.</p>
+            <p className="empty">No players on the market.</p>
           ) : (
-            <table className="players-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Age</th>
-                  <th>Nationality</th>
-                  <th>Pos</th>
-                  <th>No.</th>
-                  <th>Condition</th>
-                  <th className="col-right">Market Value</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {shownPlayers.map((p, idx) => (
-                  <tr key={p.id}>
-                    <td className="col-center">{idx + 1}</td>
-                    <td>{p.name}</td>
-                    <td className="col-center">{p.age}</td>
-                    <td>{p.nationality}</td>
-                    <td className="col-center">{p.position}</td>
-                    <td className="col-center">{p.number}</td>
-                    <td className="col-center">{p.condition}%</td>
-                    <td className="col-right">{formatBP(p.marketValue)}</td>
-                    <td className="col-center">
-                      <button className="btn-buy" onClick={() => openConfirmBuy(p)}>Buy</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="cards-grid">
+              {shownPlayers.map((p) => (
+                <div
+                  key={p.id}
+                  className="player-card"
+                  onClick={() => openDetail(p)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => (e.key === 'Enter' ? openDetail(p) : null)}
+                >
+                  {/* --- Thông tin hiển thị trên thẻ --- */}
+                  <div className="player-card__info">
+                    <div className="player-card__name">{p.name}</div>
+                    <div className="player-card__meta">
+                      <span className="player-card__pos">{p.position}</span>
+                      <span className="player-card__no">#{p.number}</span>
+                    </div>
+                  </div>
+
+                  {/* --- Nút mua --- */}
+                  <div className="player-card__actions">
+                    <button
+                      className="btn-buy"
+                      onClick={(e) => { e.stopPropagation(); openConfirmBuy(p); }}
+                    >
+                      Buy
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
@@ -262,6 +259,28 @@ const MarketView = () => {
             <div className="modal-actions">
               <button className="btn-ghost" onClick={closeConfirmBuy}>Cancel</button>
               <button className="btn-buy" onClick={doBuy}>Confirm Buy</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Detail modal */}
+      {detail.open && detail.player && (
+        <div className="modal-overlay" role="dialog" aria-modal="true">
+          <div className="modal modal-detail">
+            <h3>{detail.player.name}</h3>
+
+            <ul className="detail-list">
+              <li><span>Age</span><strong>{detail.player.age}</strong></li>
+              <li><span>Nationality</span><strong>{detail.player.nationality}</strong></li>
+              <li><span>Position</span><strong>{detail.player.position}</strong></li>
+              <li><span>Shirt No.</span><strong>{detail.player.number}</strong></li>
+              <li><span>Condition</span><strong>{detail.player.condition}%</strong></li>
+              <li><span>Market Value</span><strong>{formatBP(detail.player.marketValue)}</strong></li>
+            </ul>
+
+            <div className="modal-actions">
+              <button className="btn-ghost" onClick={closeDetail}>Close</button>
             </div>
           </div>
         </div>
