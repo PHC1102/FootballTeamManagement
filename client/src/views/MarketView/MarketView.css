@@ -36,7 +36,6 @@
   }
 }
 
-/* Chỉ thêm style riêng cho Market. Layout/table… tái dùng từ PlayerView.css */
 
 /* Nút BUY (xanh lá cây) */
 .btn-buy {
@@ -59,4 +58,48 @@
 
 .btn-buy:active {
   transform: translateY(1px);
+}
+
+.player-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.player-card__pos {
+  color: #1976d2; /* xanh dương nhẹ */
+  font-weight: 700;
+}
+
+.player-card__no {
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: 6px;
+  padding: 1px 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.btn-buy {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-buy:hover {
+  background: #1b5e20;
 }
